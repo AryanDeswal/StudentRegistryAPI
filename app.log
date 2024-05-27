@@ -1,0 +1,34 @@
+INFO: 2024/05/26 12:08:08 student_controller.go:22: Student created with ID: 26b94dec-986a-4b5f-9122-1fb9250046dc
+INFO: 2024/05/26 12:08:12 student_controller.go:28: Retrieved all students
+INFO: 2024/05/26 12:08:24 student_controller.go:43: Retrived student with ID: 26b94dec-986a-4b5f-9122-1fb9250046dc
+INFO: 2024/05/26 12:08:31 student_controller.go:57: Soft deleted student with ID: 26b94dec-986a-4b5f-9122-1fb9250046dc
+INFO: 2024/05/26 12:09:30 student_controller.go:28: Retrieved all students
+ERROR: 2024/05/26 12:09:33 student_controller.go:39: Student not found with ID: 26b94dec-986a-4b5f-9122-1fb9250046dc
+INFO: 2024/05/27 05:49:25 student_controller.go:28: Retrieved all students
+INFO: 2024/05/27 05:50:11 student_controller.go:22: Student created with ID: 36284512-73f8-43b5-95e1-80128e770c04
+INFO: 2024/05/27 05:51:54 student_controller.go:22: Student created with ID: 3292514a-b87a-4f75-a1d1-7762008e2bff
+INFO: 2024/05/27 05:52:01 student_controller.go:28: Retrieved all students
+ERROR: 2024/05/27 05:52:13 student_controller.go:39: Student not found with ID: 26b94dec-986a-4b5f-9122-1fb9250046dc
+INFO: 2024/05/27 05:52:18 student_controller.go:43: Retrived student with ID: 3292514a-b87a-4f75-a1d1-7762008e2bff
+INFO: 2024/05/27 05:52:33 student_controller.go:57: Soft deleted student with ID: 36284512-73f8-43b5-95e1-80128e770c04
+ERROR: 2024/05/27 05:52:35 student_controller.go:53: Student not found with ID: 36284512-73f8-43b5-95e1-80128e770c04
+INFO: 2024/05/27 05:52:39 student_controller.go:28: Retrieved all students
+INFO: 2024/05/27 06:09:25 student_controller.go:22: Student created with ID: 79290274-4913-45cf-9385-889475033adc
+INFO: 2024/05/27 06:09:31 student_controller.go:28: Retrieved all students
+INFO: 2024/05/27 06:09:37 student_controller.go:22: Student created with ID: 05b61307-3852-4d95-b9df-fd736ae19f5f
+INFO: 2024/05/27 06:09:39 student_controller.go:28: Retrieved all students
+ERROR: 2024/05/27 06:09:55 student_controller.go:39: Student not found with ID: 3292514a-b87a-4f75-a1d1-7762008e2bff
+ERROR: 2024/05/27 06:09:58 student_controller.go:53: Student not found with ID: 36284512-73f8-43b5-95e1-80128e770c04
+ERROR: 2024/05/27 06:12:24 student_controller.go:53: Student not found with ID: 36284512-73f8-43b5-95e1-80128e770c04
+ERROR: 2024/05/27 06:12:25 student_controller.go:53: Student not found with ID: 36284512-73f8-43b5-95e1-80128e770c04
+ERROR: 2024/05/27 06:12:30 student_controller.go:39: Student not found with ID: 3292514a-b87a-4f75-a1d1-7762008e2bff
+ERROR: 2024/05/27 06:12:31 student_controller.go:39: Student not found with ID: 3292514a-b87a-4f75-a1d1-7762008e2bff
+ERROR: 2024/05/27 06:12:31 student_controller.go:39: Student not found with ID: 3292514a-b87a-4f75-a1d1-7762008e2bff
+ERROR: 2024/05/27 06:12:37 student_controller.go:39: Student not found with ID: 3292514a-b87a-4f75-a1d1-7762008e2bff
+ERROR: 2024/05/27 06:12:39 student_controller.go:39: Student not found with ID: 3292514a-b87a-4f75-a1d1-7762008e2bff
+ERROR: 2024/05/27 06:12:41 student_controller.go:53: Student not found with ID: 36284512-73f8-43b5-95e1-80128e770c04
+INFO: 2024/05/27 06:12:47 student_controller.go:28: Retrieved all students
+INFO: 2024/05/27 06:12:50 student_controller.go:22: Student created with ID: 3f28cff9-70ef-486f-8e4f-94babaaa2ee6
+INFO: 2024/05/27 06:13:01 student_controller.go:28: Retrieved all students
+ERROR: 2024/05/27 06:13:05 student_controller.go:39: Student not found with ID: 3292514a-b87a-4f75-a1d1-7762008e2bff
+INFO: 2024/05/27 06:13:12 student_controller.go:43: Retrived student with ID: 3f28cff9-70ef-486f-8e4f-94babaaa2ee6
