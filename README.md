@@ -1,140 +1,135 @@
 # StudentRegistryAPI
 
-## Overview
-The **StudentRegistryAPI** is a Go-based RESTful API designed for managing student records, following the MVC (Model-View-Controller) architecture pattern. It supports basic CRUD (Create, Read, Update, Delete) operations with an in-memory database.
+A small RESTful API in Go for managing student records, built with an MVC-style layout and a thread-safe in-memory store.
 
-## Table of Contents
-- [Project Structure](#project-structure)
-- [Setting Up](#setting-up)
-- [Running the Application](#running-the-application)
-- [API Endpoints](#api-endpoints)
-  - [Create a Student](#create-a-student)
-  - [Get All Students](#get-all-students)
-  - [Get a Student by ID](#get-a-student-by-id)
-  - [Soft Delete a Student](#soft-delete-a-student)
-- [Logging](#logging)
-- [Additional Notes](#additional-notes)
+![Go](https://img.shields.io/badge/Go-1.22-00ADD8?logo=go&logoColor=white)
+![gorilla/mux](https://img.shields.io/badge/router-gorilla%2Fmux-2E7D32)
+
+## About
+
+StudentRegistryAPI exposes JSON endpoints to create, list, fetch and soft-delete student records. Records are kept in a mutex-guarded Go map behind a singleton (`db/in_memory_db.go`), so there is no external database to set up. All data is lost when the process stops.
+
+## Features
+
+- Create, list, get-by-ID and soft-delete student records
+- UUID assigned to each student on creation, plus a `created_at` timestamp
+- Soft delete: deleted records are flagged and hidden from reads, not removed from the map
+- Concurrency-safe in-memory storage (`sync.Mutex` + `sync.Once` singleton)
+- JSON error responses (`{"error": "..."}`) and a catch-all `404 not found` route
+- Info and error logging to `app.log`
+- Port configured through a `.env` file
+
+## Tech Stack
+
+- **Language:** Go (module targets Go 1.22.2)
+- **Router:** [gorilla/mux](https://github.com/gorilla/mux)
+- **IDs:** [google/uuid](https://github.com/google/uuid)
+- **Config:** [joho/godotenv](https://github.com/joho/godotenv)
+- **Storage:** in-memory Go map (no database)
 
 ## Project Structure
+
 ```
 StudentRegistryAPI/
+├── main.go                     # Loads .env, starts the HTTP server
+├── router/student_router.go    # Route definitions
 ├── controller/
-│   └── default_controller.go
-│   └── student_controller.go
-├── db/
-│   └── in_memory_db.go
-├── model/
-│   └── student.go
-├── router/
-│   └── student_router.go
-├── utils/
-│   └── logger
-│       └── logger.go
-├── view/
-│   └── student_view.go
-├── .gitignore
-├── app.log
-├── go.mod
-├── go.sum
-├── main.go
-└── sample.env
+│   ├── student_controller.go   # Student request handlers
+│   └── default_controller.go   # Catch-all 404 handler
+├── model/student.go            # Student struct and UUID helper
+├── db/in_memory_db.go          # Thread-safe in-memory store (singleton)
+├── view/student_view.go        # JSON response helpers
+├── utils/logger/logger.go      # Info/Error loggers writing to app.log
+├── sample.env                  # Example environment file
+├── go.mod / go.sum
+└── app.log                     # Log output
 ```
 
-## Setting Up
-Clone the repository:
+## Getting Started
+
+### Prerequisites
+
+- Go 1.22 or newer
+
+### Install and run
+
 ```sh
-git clone <repository_url>
+git clone https://github.com/AryanDeswal/StudentRegistryAPI.git
 cd StudentRegistryAPI
-```
-
-Initialize the Go module:
-```sh
-go mod init StudentRegistryAPI
-go mod tidy
-```
-
-## Running the Application
-Run the application:
-```sh
+go mod download
+cp sample.env .env
 go run main.go
 ```
 
-## API Endpoints
+The server prints `server running on port <PORT>` once it starts. A `.env` file is required: the app exits if it cannot load one or if `PORT` is unset.
 
-### Create a Student
-- **URL:** `/student/v1/students`
-- **Method:** `POST`
-- **Request Body:**
-  ```json
-  {
-    "name": "John Doe",
-    "age": 20,
-    "class": "Physics",
-    "subject": "Quantum Mechanics"
-  }
-  ```
-- If you don't provide the required fields in the request body, those fields will be initialized as follows:
-  1. Empty strings for string fields.
-  2. Zero for integer fields.
-- Extra key-value pairs will be ignored
-- **Response:**
-  ```json
-  {
-    "id": "generated-uuid"
-  }
-  ```
+### Environment variables
 
-### Get All Students
-- **URL:** `/student/v1/students`
-- **Method:** `GET`
-- **Response:**
-  ```json
-  [
-    {
-      "id": "student-uuid-1",
-      "name": "John Doe",
-      "age": 20,
-      "class": "Physics",
-      "subject": "Quantum Mechanics",
-      "created_at": "2023-05-26T13:47:00Z"
-    },
-    {
-      "id": "student-uuid-2",
-      "name": "Jane Doe",
-      "age": 22,
-      "class": "Chemistry",
-      "subject": "Organic Chemistry",
-      "created_at": "2023-05-26T13:47:00Z"
-    }
-  ]
-  ```
+| Name   | Purpose                               |
+| ------ | ------------------------------------- |
+| `PORT` | Port the HTTP server listens on (`sample.env` uses `8080`) |
 
-### Get a Student by ID
-- **URL:** `/student/v1/students/{studentId}`
-- **Method:** `GET`
-- **Response:**
-  ```json
-  {
-    "id": "student-uuid",
-    "name": "John Doe",
-    "age": 20,
-    "class": "Physics",
-    "subject": "Quantum Mechanics",
-    "created_at": "2023-05-26T13:47:00Z"
-  }
-  ```
+## API Reference
 
-### Soft Delete a Student
-- **URL:** `/student/v1/students/{studentId}`
-- **Method:** `DELETE`
-- **Response:** `204 No Content`
+Base path: `/student/v1`
+
+| Method   | Route                              | Description                                   |
+| -------- | ---------------------------------- | --------------------------------------------- |
+| `POST`   | `/student/v1/students`             | Create a student, returns `201` with `{"id": "<uuid>"}` |
+| `GET`    | `/student/v1/students`             | List all students that are not deleted        |
+| `GET`    | `/student/v1/students/{studentId}` | Get one student, or `404` if missing/deleted  |
+| `DELETE` | `/student/v1/students/{studentId}` | Soft-delete a student, returns `204 No Content` (or `404`) |
+
+Any other route returns `404 not found`.
+
+### Student object
+
+| Field        | Type   | Notes                          |
+| ------------ | ------ | ------------------------------ |
+| `id`         | string | UUID, set by the server        |
+| `name`       | string |                                |
+| `age`        | int    |                                |
+| `class`      | string |                                |
+| `subject`    | string |                                |
+| `created_at` | string | RFC 3339 timestamp, set by the server |
+
+Missing fields in the request body default to `""` or `0`. Unknown keys are ignored.
+
+## Usage
+
+```sh
+# Create
+curl -X POST http://localhost:8080/student/v1/students \
+  -H "Content-Type: application/json" \
+  -d '{"name": "John Doe", "age": 20, "class": "Physics", "subject": "Quantum Mechanics"}'
+# {"id":"<uuid>"}
+
+# List
+curl http://localhost:8080/student/v1/students
+
+# Get one
+curl http://localhost:8080/student/v1/students/<uuid>
+
+# Soft delete
+curl -X DELETE http://localhost:8080/student/v1/students/<uuid>
+```
+
+Example student response:
+
+```json
+{
+  "id": "student-uuid",
+  "name": "John Doe",
+  "age": 20,
+  "class": "Physics",
+  "subject": "Quantum Mechanics",
+  "created_at": "2024-05-26T12:08:08Z"
+}
+```
 
 ## Logging
-The application logs events to `app.log` with two log levels:
-- **Info Logger:** Logs informational messages, such as successful operations.
-- **Error Logger:** Logs error messages, such as failed operations.
 
-## Additional Notes
-- **Soft Delete:** Deleting a student marks the record as deleted but does not remove it from the database.
-- **UUID Generation:** Each student record is assigned a unique UUID upon creation.
-- **In-Memory Database:** The application uses an in-memory database (a map) for simplicity. Data will be lost when the application stops.
+`utils/logger` opens `app.log` in the working directory (append mode) and provides two loggers:
+
+- `INFO:` successful operations (create, list, get, delete)
+- `ERROR:` failures such as invalid request bodies or unknown IDs
